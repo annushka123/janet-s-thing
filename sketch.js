@@ -6,6 +6,7 @@ function setup() {
   createCanvas(windowWidth, windowHeight);
   circleX = width / 2;
   circleY = height / 2;
+  frameRate(30);
 }
 
 function draw() {
