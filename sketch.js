@@ -5,6 +5,7 @@ let playButton;
 let currentTrack = null;
 let trackPlaying = false;
 let audioZones = []; // Stores all 12 tracks
+let initialSound; // Store the default center sound
 
 
 // Define Plutchik's colors
@@ -17,6 +18,10 @@ function preload() {
     loadSound('angrylaugh_2.wav'), loadSound('screams_2.wav'), loadSound('shortangry_2.wav'), loadSound('shortangry_7.wav'), // Mid-Zone Quadrants
     loadSound('angrylaugh_3.wav'), loadSound('screams_3.wav'), loadSound('shortangry_3.wav'), loadSound('shortangry_8.wav')  // Outer Quadrants
   ];
+
+
+  initialSound = loadSound('angrylaugh_10.wav'); // Add an appropriate audio file
+
 }
 
 function setup() {
@@ -34,8 +39,8 @@ function setup() {
   // Create Play Button
   playButton = createButton('▶ ');
   playButton.position(width / 2 - 75, height - 200);
-  playButton.size(150, 150);
-  playButton.style('font-size', '50px');
+  playButton.size(160, 160);
+  playButton.style('font-size', '100px');
   playButton.style('background-color', '#800080');
   playButton.style('color', 'white');
   playButton.style('border', 'none');
@@ -136,13 +141,18 @@ function getAudioZone() {
   return -1; // No valid zone
 }
 
-// Play the current track based on ellipse position
 function playCurrentTrack() {
   if (!trackPlaying) {
     let zone = getAudioZone();
-    if (zone !== -1 && audioZones[zone]) {
+    
+    // If the circle hasn't moved yet, play the center sound
+    if (zone === -1) {
+      currentTrack = initialSound;
+    } else if (audioZones[zone]) {
       currentTrack = audioZones[zone];
+    }
 
+    if (currentTrack) {
       userStartAudio().then(() => {
         currentTrack.play();
         trackPlaying = true;
@@ -150,7 +160,7 @@ function playCurrentTrack() {
 
         currentTrack.onended(() => {
           trackPlaying = false;
-          playButton.style('background-color', '#800080'); // Ready for next track
+          playButton.style('background-color', '#800080'); // Reset to purple
         });
       }).catch(error => {
         console.error("Audio playback failed:", error);
@@ -158,3 +168,27 @@ function playCurrentTrack() {
     }
   }
 }
+
+
+// // Play the current track based on ellipse position
+// function playCurrentTrack() {
+//   if (!trackPlaying) {
+//     let zone = getAudioZone();
+//     if (zone !== -1 && audioZones[zone]) {
+//       currentTrack = audioZones[zone];
+
+//       userStartAudio().then(() => {
+//         currentTrack.play();
+//         trackPlaying = true;
+//         playButton.style('background-color', 'gray'); // Disable look
+
+//         currentTrack.onended(() => {
+//           trackPlaying = false;
+//           playButton.style('background-color', '#800080'); // Ready for next track
+//         });
+//       }).catch(error => {
+//         console.error("Audio playback failed:", error);
+//       });
+//     }
+//   }
+// }
