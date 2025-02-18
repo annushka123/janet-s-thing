@@ -183,25 +183,30 @@
           audioZones[key] = []; // Initialize as an array
         }
       }
-
+    
       // Load all 120 files dynamically
       for (let i = 0; i < 10; i++) {
         for (let cat of categories) {
           for (let z of zones) {
             let key = `${cat}_${z}`;
-            let filename = `${cat}_${z}_${i}.wav`; // Example: angry_a_0.wav
-            try {
+            let filename = `/public/audio/${cat}_${z}_${i}.wav`; // Updated path
+            if (filename) {
               let sound = loadSound(filename, 
                 () => console.log(`Loaded: ${filename}`), 
                 () => console.warn(`Failed to load: ${filename}`)
               );
               audioZones[key].push(sound);
-            } catch (error) {
-              console.error(`Error loading ${filename}:`, error);
             }
           }
         }
       }
+    
+      // Load center sound
+      initialSound = loadSound('/public/sound.wav', // Updated path
+        () => console.log(`Loaded center sound`), 
+        () => console.warn(`Failed to load center sound`)
+      );
+    }
 
       // Load center sound
       try {
