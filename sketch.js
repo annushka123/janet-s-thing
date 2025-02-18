@@ -173,7 +173,9 @@
     let joy, anger, sadness, trust;
 
     function preload() {
-      // Ensure `audioZones` keys exist before using `.push()`
+      console.log('Starting preload...');
+      
+      // Initialize audioZones object
       let categories = ["angry", "happy", "calm", "sad"];
       let zones = ["a", "b", "c"];
       
@@ -189,23 +191,35 @@
         for (let cat of categories) {
           for (let z of zones) {
             let key = `${cat}_${z}`;
-            let filename = `/public/audio/${cat}_${z}_${i}.wav`; // Updated path
-            if (filename) {
+            let filename = `/audio/${cat}_${z}_${i}.wav`; // Add leading slash for Netlify
+            console.log(`Attempting to load: ${filename}`);
+            try {
               let sound = loadSound(filename, 
-                () => console.log(`Loaded: ${filename}`), 
-                () => console.warn(`Failed to load: ${filename}`)
+                () => {
+                  console.log(`Successfully loaded: ${filename}`);
+                  audioZones[key].push(sound);
+                }, 
+                (error) => {
+                  console.error(`Failed to load: ${filename}`, error);
+                }
               );
-              audioZones[key].push(sound);
+            } catch (error) {
+              console.error(`Error loading ${filename}:`, error);
             }
           }
         }
       }
     
       // Load center sound
-      initialSound = loadSound('/public/sound.wav', // Updated path
-        () => console.log(`Loaded center sound`), 
-        () => console.warn(`Failed to load center sound`)
-      );
+      try {
+        console.log('Attempting to load center sound');
+        initialSound = loadSound('/audio/sound.wav',
+          () => console.log('Successfully loaded center sound'), 
+          (error) => console.error('Failed to load center sound:', error)
+        );
+      } catch (error) {
+        console.error('Error loading center sound:', error);
+      }
     }
 
       // Load center sound
@@ -217,7 +231,7 @@
       } catch (error) {
         console.error('Error loading center sound:', error);
       }
-    }
+    
 
     function setup() {
       createCanvas(windowWidth, windowHeight);
