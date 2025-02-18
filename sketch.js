@@ -162,7 +162,7 @@ let offsetX, offsetY;
 let playButton;
 let currentTrack = null;
 let trackPlaying = false;
-let audioZones = {}; // Stores all 120 tracks in an object
+let audioZones = {}; // Stores all 120 tracks
 let initialSound;
 let circleColor;
 
@@ -187,13 +187,22 @@ function preload() {
       for (let z of zones) {
         let key = `${cat}_${z}`;
         let filename = `${cat}_${z}_${i}.wav`; // Example: angry_a_0.wav
-        audioZones[key].push(loadSound(filename));
+        if (filename) {
+          let sound = loadSound(filename, 
+            () => console.log(`Loaded: ${filename}`), 
+            () => console.warn(`Failed to load: ${filename}`)
+          );
+          audioZones[key].push(sound);
+        }
       }
     }
   }
 
   // Load center sound
-  initialSound = loadSound('sound.wav');
+  initialSound = loadSound('sound.wav', 
+    () => console.log(`Loaded center sound`), 
+    () => console.warn(`Failed to load center sound`)
+  );
 }
 
 function setup() {
@@ -306,6 +315,8 @@ function playCurrentTrack() {
           trackPlaying = false;
           playButton.style('background-color', '#800080');
         });
+      } else {
+        console.warn(`Audio not playing: ${key}`);
       }
     } else {
       console.warn(`No audio tracks found for key: ${key}`);
