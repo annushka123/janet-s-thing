@@ -198,7 +198,7 @@ function preload() {
   }
 
   // Load center sound
-  initialSound = loadSound('angrylaugh_10.wav');
+  initialSound = loadSound('sound.wav');
 }
 
 function setup() {
