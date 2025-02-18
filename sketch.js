@@ -171,30 +171,26 @@ let circleColor;
 let joy, anger, sadness, trust;
 
 function preload() {
-  audioZones = {
-    "anger_a": [], "anger_b": [], "anger_c": [],
-    "happy_a": [], "happy_b": [], "happy_c": [],
-    "calm_a": [], "calm_b": [], "calm_c": [],
-    "sad_a": [], "sad_b": [], "sad_c": []
-  };
+  // Ensure `audioZones` keys exist before using `.push()`
+  let categories = ["anger", "happy", "calm", "sad"];
+  let zones = ["a", "b", "c"];
+  
+  for (let cat of categories) {
+    for (let z of zones) {
+      let key = `${cat}_${z}`;
+      audioZones[key] = []; // Initialize as an array
+    }
+  }
 
   // Load all 120 files dynamically
   for (let i = 0; i < 10; i++) {
-    audioZones["anger_a"].push(loadSound(`angry_a_${i}.wav`));
-    audioZones["anger_b"].push(loadSound(`angry_b_${i}.wav`));
-    audioZones["anger_c"].push(loadSound(`angry_c_${i}.wav`));
-
-    audioZones["happy_a"].push(loadSound(`happy_a_${i}.wav`));
-    audioZones["happy_b"].push(loadSound(`happy_b_${i}.wav`));
-    audioZones["happy_c"].push(loadSound(`happy_c_${i}.wav`));
-
-    audioZones["calm_a"].push(loadSound(`calm_a_${i}.wav`));
-    audioZones["calm_b"].push(loadSound(`calm_b_${i}.wav`));
-    audioZones["calm_c"].push(loadSound(`calm_c_${i}.wav`));
-
-    audioZones["sad_a"].push(loadSound(`sad_a_${i}.wav`));
-    audioZones["sad_b"].push(loadSound(`sad_b_${i}.wav`));
-    audioZones["sad_c"].push(loadSound(`sad_c_${i}.wav`));
+    for (let cat of categories) {
+      for (let z of zones) {
+        let key = `${cat}_${z}`;
+        let filename = `${cat}_${z}_${i}.wav`; // Example: angry_a_0.wav
+        audioZones[key].push(loadSound(filename));
+      }
+    }
   }
 
   // Load center sound
@@ -203,7 +199,7 @@ function preload() {
 
 function setup() {
   createCanvas(windowWidth, windowHeight);
-  userStartAudio();
+  userStartAudio(); // Moved to setup() to ensure it runs before sounds play
   circleX = width / 2;
   circleY = height / 2;
 
@@ -298,24 +294,22 @@ function playCurrentTrack() {
   if (!trackPlaying) {
     let key = getAudioKey();
     
-    if (audioZones[key]) {
+    if (audioZones[key] && audioZones[key].length > 0) { // Ensure track list is not empty
       let trackList = audioZones[key];
       let newTrack = random(trackList);
 
       if (newTrack && !newTrack.isPlaying()) {
-        userStartAudio().then(() => {
-          newTrack.play();
-          trackPlaying = true;
-          playButton.style('background-color', 'gray');
+        newTrack.play();
+        trackPlaying = true;
+        playButton.style('background-color', 'gray');
 
-          newTrack.onended(() => {
-            trackPlaying = false;
-            playButton.style('background-color', '#800080');
-          });
-        }).catch(error => {
-          console.error("Audio playback failed:", error);
+        newTrack.onended(() => {
+          trackPlaying = false;
+          playButton.style('background-color', '#800080');
         });
       }
+    } else {
+      console.warn(`No audio tracks found for key: ${key}`);
     }
   }
 }
