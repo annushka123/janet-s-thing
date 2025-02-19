@@ -94,7 +94,7 @@ function draw() {
   background(0, 50);
 
   drawAudioMarkers(); // Show where sounds are positioned
-
+  generateAudioPositions();
   // Draggable Ellipse with Lerp Color
   noStroke();
   fill(circleColor);
@@ -163,18 +163,40 @@ function generateAudioPositions() {
   }
 }
 
+// 🔹 **Draw Audio Markers on the Screen**
 function drawAudioMarkers() {
-  let radii = [width / 4, (width - width / 4) / 2, width / 1.5];
-  let angles = [-PI, -PI / 2, 0, PI / 2];
+  for (let pos of audioPositions) {
+    fill(pos.color);
+    noStroke();
+    ellipse(pos.x, pos.y, 20, 20);
+  }
+}
 
-  for (let r of radii) {
-    for (let angle of angles) {
+function generateAudioPositions() {
+  let radii = [width / 4, (width - width / 4) / 2, width / 1.5]; // Inner, Mid, Outer
+  let angles = [PI, PI / 2, 0, -PI / 2]; // Top-left, Top-right, Bottom-right, Bottom-left
+
+  let categories = ["angry", "happy", "calm", "sad"];
+  let zones = ["a", "b", "c"];
+
+  audioPositions = [];
+
+  for (let i = 0; i < categories.length; i++) {
+    let category = categories[i];
+
+    for (let j = 0; j < zones.length; j++) {
+      let zone = zones[j];
+
+      let r = radii[j];  // Set radius based on A/B/C zones
+      let angle = angles[i];  // Assign quadrant angle
+
       let x = width / 2 + cos(angle) * r;
       let y = height / 2 + sin(angle) * r;
 
-      fill(255, 255, 255);
-      noStroke();
-      ellipse(x, y, 10, 10); // White dots marking audio positions
+      let key = `${category}_${zone}`;
+      let color = getQuadrantColor(x, y); // Color matches emotion
+
+      audioPositions.push({ x, y, color, key });
     }
   }
 }
