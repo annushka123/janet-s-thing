@@ -111,10 +111,10 @@ function getAudioZone() {
              "c";
 
   let quadrant =
-    (angle >= PI / 2 && angle <= PI) ? "angry" :
-    (angle > 0 && angle < PI / 2) ? "happy" :
-    (angle > -PI / 2 && angle <= 0) ? "calm" :
-    "sad";
+    (angle >= PI / 2 && angle <= PI) ? "sad":
+    (angle > 0 && angle < PI / 2) ? "calm" :
+    (angle > -PI / 2 && angle <= 0) ?  "happy":
+    "angry" ;
 
   return `${quadrant}_${zone}`;
 }
@@ -174,7 +174,7 @@ function drawAudioMarkers() {
 
 function generateAudioPositions() {
   let radii = [width / 4, (width - width / 4) / 2, width / 1.5]; // Inner, Mid, Outer
-  let angles = [PI / 2, -PI / 2, PI,   0, ]; // Top-left, Top-right, Bottom-right, Bottom-left
+  let angles = [PI, PI / 2, 0, -PI / 2]; // Top-left, Top-right, Bottom-right, Bottom-left
 
   let categories = ["angry", "happy", "calm", "sad"];
   let zones = ["a", "b", "c"];
