@@ -30,7 +30,7 @@ function preload() {
   }
 
   // Load only 2 sounds per zone (for a total of 24)
-  for (let i = 0; i < 2; i++) {
+  for (let i = 0; i < 10; i++) {
     for (let cat of categories) {
       for (let z of zones) {
         let key = `${cat}_${z}`;
