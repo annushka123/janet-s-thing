@@ -174,7 +174,7 @@ function drawAudioMarkers() {
 
 function generateAudioPositions() {
   let radii = [width / 4, (width - width / 4) / 2, width / 1.5]; // Inner, Mid, Outer
-  let angles = [PI, PI / 2, 0, -PI / 2]; // Top-left, Top-right, Bottom-right, Bottom-left
+  let angles = [PI / 2, -PI / 2, PI,   0, ]; // Top-left, Top-right, Bottom-right, Bottom-left
 
   let categories = ["angry", "happy", "calm", "sad"];
   let zones = ["a", "b", "c"];
