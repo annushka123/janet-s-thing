@@ -163,14 +163,22 @@ function generateAudioPositions() {
   }
 }
 
-// 🔹 **Draw Audio Markers on the Screen**
 function drawAudioMarkers() {
-  for (let pos of audioPositions) {
-    fill(pos.color);
-    noStroke();
-    ellipse(pos.x, pos.y, 20, 20);
+  let radii = [width / 4, (width - width / 4) / 2, width / 1.5];
+  let angles = [-PI, -PI / 2, 0, PI / 2];
+
+  for (let r of radii) {
+    for (let angle of angles) {
+      let x = width / 2 + cos(angle) * r;
+      let y = height / 2 + sin(angle) * r;
+
+      fill(255, 255, 255);
+      noStroke();
+      ellipse(x, y, 10, 10); // White dots marking audio positions
+    }
   }
 }
+
 
 // 🎨 **Determine Color Based on Position**
 function getQuadrantColor(x, y) {
