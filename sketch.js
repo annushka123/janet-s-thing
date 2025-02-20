@@ -29,7 +29,7 @@ function preload() {
     }
   }
 
-  // Load only 2 sounds per zone (for a total of 24)
+
   for (let i = 0; i < 10; i++) {
     for (let cat of categories) {
       for (let z of zones) {
@@ -123,33 +123,60 @@ function getAudioZone() {
   return `${quadrant}_${zone}`;
 }
 
-// 🟢 **Play Audio Based on Zone**
+// // 🟢 **Play Audio Based on Zone**
+// function playCurrentTrack() {
+//   if (!trackPlaying) {
+//     let key = getAudioZone();
+
+//     if (audioZones[key] && audioZones[key].length > 0) {
+//       let trackList = audioZones[key];
+//       let newTrack = random(trackList);
+
+//       if (newTrack && !newTrack.isPlaying()) {
+//         console.log(`🎵 Playing: ${key}`);
+//         newTrack.play();
+//         trackPlaying = true;
+//         playButton.style('background-color', 'gray');
+
+//         newTrack.onended(() => {
+//           trackPlaying = false;
+//           playButton.style('background-color', '#800080');
+//         });
+//       } else {
+//         console.warn(`🚫 Track is undefined or already playing for key: ${key}`);
+//       }
+//     } else {
+//       console.warn(`⚠️ No audio found for key: ${key}`);
+//     }
+//   }
+// }
+
 function playCurrentTrack() {
   if (!trackPlaying) {
     let key = getAudioZone();
+    
+    console.log(`🎵 Playing: ${key}`); // Debugging: Show which track is playing
 
     if (audioZones[key] && audioZones[key].length > 0) {
       let trackList = audioZones[key];
       let newTrack = random(trackList);
 
       if (newTrack && !newTrack.isPlaying()) {
-        console.log(`🎵 Playing: ${key}`);
         newTrack.play();
-        trackPlaying = true;
+        trackPlaying = true; // 🔹 Stop movement while playing
         playButton.style('background-color', 'gray');
 
         newTrack.onended(() => {
-          trackPlaying = false;
+          trackPlaying = false; // 🔹 Re-enable movement when audio stops
           playButton.style('background-color', '#800080');
         });
-      } else {
-        console.warn(`🚫 Track is undefined or already playing for key: ${key}`);
       }
     } else {
-      console.warn(`⚠️ No audio found for key: ${key}`);
+      console.warn(`⚠️ No audio found for: ${key}`);
     }
   }
 }
+
 
 // 🔹 **Create a Visual Representation of Audio Zones**
 function generateAudioPositions() {
@@ -213,9 +240,21 @@ function getQuadrantColor(x, y) {
   return lerpColor(topColor, bottomColor, map(y, 0, height, 0, 1));
 }
 
-// 🎯 **Touch & Dragging Logic**
+// // 🎯 **Touch & Dragging Logic**
+// function touchStarted() {
+//   if (touches.length > 0) {
+//     let d = dist(touches[0].x, touches[0].y, circleX, circleY);
+//     if (d < circleSize / 2) {
+//       dragging = true;
+//       offsetX = touches[0].x - circleX;
+//       offsetY = touches[0].y - circleY;
+//     }
+//   }
+//   return false;
+// }
+
 function touchStarted() {
-  if (touches.length > 0) {
+  if (!trackPlaying && touches.length > 0) { // 🔹 Prevent drag if a track is playing
     let d = dist(touches[0].x, touches[0].y, circleX, circleY);
     if (d < circleSize / 2) {
       dragging = true;
@@ -226,20 +265,37 @@ function touchStarted() {
   return false;
 }
 
+
+// function touchMoved() {
+//   if (dragging && touches.length > 0) {
+//     let newX = touches[0].x - offsetX;
+//     let newY = touches[0].y - offsetY;
+
+//     if (newX !== circleX || newY !== circleY) {
+//       circleX = newX;
+//       circleY = newY;
+//       circleColor = getQuadrantColor(circleX, circleY);
+//       redraw();
+//     }
+//   }
+//   return false;
+// }
+
 function touchMoved() {
-  if (dragging && touches.length > 0) {
+  if (!trackPlaying && dragging && touches.length > 0) { // 🔹 Only allow movement when no audio is playing
     let newX = touches[0].x - offsetX;
     let newY = touches[0].y - offsetY;
 
-    if (newX !== circleX || newY !== circleY) {
-      circleX = newX;
-      circleY = newY;
-      circleColor = getQuadrantColor(circleX, circleY);
-      redraw();
-    }
+    // 🔹 Apply constraints so it stays inside the canvas
+    circleX = constrain(newX, circleSize / 2, width - circleSize / 2);
+    circleY = constrain(newY, circleSize / 2, height - circleSize / 2);
+    
+    circleColor = getQuadrantColor(circleX, circleY); // Update color dynamically
+    redraw(); // Redraw only when needed
   }
   return false;
 }
+
 
 function touchEnded() {
   dragging = false;
