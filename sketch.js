@@ -95,10 +95,14 @@ function draw() {
 
   drawAudioMarkers(); // Show where sounds are positioned
   generateAudioPositions();
+//constraining the ellipse within the canvas
+  circleX = constrain(circleX, circleSize/2, width-circleSize/2);
+  circleY = constrain(circleY, circleSize/2, height-circleSize/2);
   // Draggable Ellipse with Lerp Color
   noStroke();
   fill(circleColor);
   ellipse(circleX, circleY, circleSize);
+ 
 }
 
 // 🎯 **Updated Zone Calculation Using Distance & Angle**
