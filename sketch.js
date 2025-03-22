@@ -11,7 +11,7 @@ let hoverStart = true;
 let hoverStartTime;
 let hoverAmplitudeX = 20; // Wider side-to-side motion
 let hoverAmplitudeY = 10; // Subtler up-down motion
-let hoverSpeed = 0.05;   // Speed of motion
+let hoverSpeed = 0.005;   // Speed of motion
 
 
 // Define colors for visualization
@@ -195,21 +195,21 @@ function playCurrentTrack() {
 }
 
 
-// 🔹 **Create a Visual Representation of Audio Zones**
-function generateAudioPositions() {
-  let radii = [width / 4, (width - width / 4) / 2, width / 1.5];
-  let angles = [-PI, -PI / 2, 0, PI / 2];
+// // 🔹 **Create a Visual Representation of Audio Zones**
+// function generateAudioPositions() {
+//   let radii = [width / 4, (width - width / 4) / 2, width / 1.5];
+//   let angles = [-PI, -PI / 2, 0, PI / 2];
 
-  audioPositions = [];
+//   audioPositions = [];
 
-  for (let r of radii) {
-    for (let angle of angles) {
-      let x = width / 2 + cos(angle) * r;
-      let y = height / 2 + sin(angle) * r;
-      audioPositions.push({ x, y, color: getQuadrantColor(x, y) });
-    }
-  }
-}
+//   for (let r of radii) {
+//     for (let angle of angles) {
+//       let x = width / 2 + cos(angle) * r;
+//       let y = height / 2 + sin(angle) * r;
+//       audioPositions.push({ x, y, color: getQuadrantColor(x, y) });
+//     }
+//   }
+// }
 
 // 🔹 **Draw Audio Markers on the Screen**
 function drawAudioMarkers() {
