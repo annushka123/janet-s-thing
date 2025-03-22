@@ -7,6 +7,11 @@ let trackPlaying = false;
 let audioZones = {};
 let initialSound;
 let circleColor;
+let hoverStart = true;
+let hoverStartTime;
+let hoverAmplitude = 10; // How far the circle moves
+let hoverSpeed = 0.05;   // Speed of motion
+
 
 // Define colors for visualization
 let joy, anger, sadness, trust;
@@ -86,6 +91,9 @@ function setup() {
   playButton.mousePressed(playCurrentTrack);
   playButton.touchStarted(playCurrentTrack);
 
+  hoverStartTime = millis();
+
+
   generateAudioPositions(); // Place audio markers
   noLoop();
 }
@@ -95,6 +103,13 @@ function draw() {
 
   drawAudioMarkers(); // Show where sounds are positioned
   generateAudioPositions();
+
+  if (hoverStart && millis() - hoverStartTime < 3000) { // 3 seconds
+    let t = millis() * hoverSpeed;
+    circleX = width / 2 + sin(t) * hoverAmplitude;
+    circleY = height / 2 + cos(t) * hoverAmplitude;
+  }
+  
 //constraining the ellipse within the canvas
   circleX = constrain(circleX, circleSize/2, width-circleSize/2);
   circleY = constrain(circleY, circleSize/2, height-circleSize/2);
@@ -254,6 +269,9 @@ function getQuadrantColor(x, y) {
 // }
 
 function touchStarted() {
+
+  hoverStart = false; // Stop hovering when user interacts
+
   if (!trackPlaying && touches.length > 0) { // 🔹 Prevent drag if a track is playing
     let d = dist(touches[0].x, touches[0].y, circleX, circleY);
     if (d < circleSize / 2) {
