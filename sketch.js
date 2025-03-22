@@ -96,7 +96,7 @@ function setup() {
 
 
   generateAudioPositions(); // Place audio markers
-  noLoop();
+  //noLoop();
 }
 
 function draw() {
