@@ -9,7 +9,8 @@ let initialSound;
 let circleColor;
 let hoverStart = true;
 let hoverStartTime;
-let hoverAmplitude = 10; // How far the circle moves
+let hoverAmplitudeX = 20; // Wider side-to-side motion
+let hoverAmplitudeY = 10; // Subtler up-down motion
 let hoverSpeed = 0.05;   // Speed of motion
 
 
@@ -104,11 +105,12 @@ function draw() {
   drawAudioMarkers(); // Show where sounds are positioned
   generateAudioPositions();
 
-  if (hoverStart && millis() - hoverStartTime < 3000) { // 3 seconds
-    let t = millis() * hoverSpeed;
-    circleX = width / 2 + sin(t) * hoverAmplitude;
-    circleY = height / 2 + cos(t) * hoverAmplitude;
+  if (hoverStart && millis() - hoverStartTime < 4000) { // 4 seconds of hover
+    let t = millis();
+    circleX = width / 2 + sin(t * hoverSpeed) * hoverAmplitudeX;
+    circleY = height / 2 + cos(t * hoverSpeed) * hoverAmplitudeY;
   }
+  
   
 //constraining the ellipse within the canvas
   circleX = constrain(circleX, circleSize/2, width-circleSize/2);
