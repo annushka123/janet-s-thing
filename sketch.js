@@ -97,6 +97,7 @@ function setup() {
 
   generateAudioPositions(); // Place audio markers
   //noLoop();
+  loop();
 }
 
 function draw() {
@@ -105,10 +106,13 @@ function draw() {
   drawAudioMarkers(); // Show where sounds are positioned
   generateAudioPositions();
 
-  if (hoverStart && millis() - hoverStartTime < 10000) { // 4 seconds of hover
+  if (hoverStart && millis() - hoverStartTime < 15000) {
     let t = millis();
     circleX = width / 2 + sin(t * hoverSpeed) * hoverAmplitudeX;
     circleY = height / 2 + cos(t * hoverSpeed) * hoverAmplitudeY;
+    redraw(); // Request next frame *only if* we're hovering
+  } else {
+    noLoop(); // Stop drawing after hover finishes
   }
   
   
