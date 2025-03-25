@@ -40,7 +40,7 @@ function preload() {
     for (let cat of categories) {
       for (let z of zones) {
         let key = `${cat}_${z}`;
-        let filename = `${baseURL}${cat}_${z}_${i}.wav`;
+        let filename = `${baseURL}${cat}_${z}_${i}.mp3`;
 
         console.log(`🔄 Trying to load: ${filename}`);
 
@@ -56,7 +56,7 @@ function preload() {
   }
 
   // Load center sound
-  let centerSoundURL = `${baseURL}sound.wav`;
+  let centerSoundURL = `${baseURL}sound.mp3`;
   initialSound = loadSound(
     centerSoundURL,
     () => console.log(`✅ Loaded center sound`),
